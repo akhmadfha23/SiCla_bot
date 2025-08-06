@@ -1,23 +1,24 @@
-import telebot
-import requests
+import asyncio
+from telegram import Bot, Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-API_TOKEN = '7780281238:AAHPP2lQ2as8HB7krpnaCe5L1rjneB_-dJM'
-bot = telebot.TeleBot(API_TOKEN)
+# Token dari @ProScalpersbot
+TOKEN = "8101484453:AAFlsP6Af3DsbfdH-dmwze3KHRK8zfdDUW0"
 
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    bot.reply_to(message, "Halo! Kirim /analisa untuk mendapatkan analisa pasar.")
+# Fungsi untuk handle perintah /start
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Halo! Bot ProScalpers aktif! 🚀 Siap kirim sinyal!")
 
-@bot.message_handler(commands=['analisa'])
-def handle_analisa(message):
-    bot.send_chat_action(message.chat.id, 'typing')
-    analysis_text = get_fake_analysis()
-    bot.reply_to(message, analysis_text)
+# Fungsi utama untuk menjalankan bot
+async def main():
+    print("🚀 Starting ProScalpers bot...")
+    application = ApplicationBuilder().token(TOKEN).build()
 
-def get_fake_analysis():
-    return ("📊 *Analisa BTC/USD:*\n"
-            "RSI: 38 | MACD: Bullish Cross\n"
-            "Rekomendasi: Buy limit di support 60.000\n"
-            "_(Data simulasi – nanti bisa real)_")
+    application.add_handler(CommandHandler("start", start))
 
-bot.polling(non_stop=True)
+    await application.run_polling()
+
+# Jalankan program
+if __name__ == "__main__":
+    print("✅ Bot is running...")
+    asyncio.run(main())
